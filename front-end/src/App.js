@@ -1,10 +1,76 @@
-import './App.css';
-import Table from './components/table/Table';
+import { useEffect, useState } from "react";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref } from "firebase/database";
+import { getRepoFiles } from "./api";
+import SubjectList from './components/Subject/SubjectList';
+import SubjectPicker from './components/Subject/SubjectPicker';
+import ListRecord from "./components/Record/ListRecord";
 
 function App() {
+  const [subjects, setSubjects] = useState([]);
+
+  useEffect(() => {
+    getRepoFiles()
+      .then(data => {
+        const readmes = data.tree.filter(file => file.path.includes('README.md'));
+        saveSubjects(readmes);
+      });
+  }, []);
+
+  const firebaseConfig = {
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: "til-study-tool.firebaseapp.com",
+    projectId: "til-study-tool",
+    storageBucket: "til-study-tool.appspot.com",
+    messagingSenderId: "1006968567706",
+    appId: "1:1006968567706:web:c79c3616cdbe0fc29aec23",
+    measurementId: "G-ZK7MJGRSJ1"
+  };
+  initializeApp(firebaseConfig);
+  const db = getDatabase();
+  const recordRef = ref(db, 'record');
+
+  const saveSubjects = readmes => {
+    let readmeArrs = readmes.map(readme => readme.path.split('/'));
+    readmeArrs = readmeArrs.filter(arr => arr.length >= 2);
+
+    readmeArrs.sort((a, b) => {
+      let idx = 0;
+      let compare;
+      while (true) {
+        if (a[idx] === 'README.md' || b[idx] === 'etc') return -1;
+        else if (a[idx] === 'etc' || b[idx] === 'README.md') return 1;
+        
+        compare = a[idx].localeCompare(b[idx].toUpperCase(), undefined, { sensitivity: 'accent' });
+        if (compare !== 0) {
+          return compare;
+        }
+        idx++;
+      };
+    });
+    
+    const baseUrl = 'https://github.com/WoosubLeee/TIL/tree/master/';
+    const subjects = readmeArrs.map(arr => {
+      arr = arr.slice(0, arr.length-1);
+      return {
+        subject: arr,
+        url: baseUrl + arr.join('/'),
+      };
+    });
+    setSubjects(subjects);
+  };
+
   return (
-    <div className="App mx-auto">
-      <Table />
+    <div className="App mx-auto my-4">
+      <SubjectPicker subjects={subjects} recordRef={recordRef} />
+      <div className="d-flex">
+        <div className="w-50">
+          <SubjectList subjects={subjects} />
+        </div>
+        <div className="w-50">
+          <ListRecord subjects={subjects} recordRef={recordRef} />
+        </div>
+      </div>
     </div>
   );
 }

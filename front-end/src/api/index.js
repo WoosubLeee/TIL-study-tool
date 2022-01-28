@@ -1,4 +1,6 @@
-const getRepoFiles = () => {
+import { push, set } from "firebase/database";
+
+export const getRepoFiles = () => {
   const headers = {
     Authorization: 'Token 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',
   };
@@ -9,4 +11,7 @@ const getRepoFiles = () => {
     .then(res => res.json());
 };
 
-export default getRepoFiles;
+export const recordStudy = (ref, data) => {
+  data.timestamp = new Date().getTime();
+  set(push(ref), data);
+};
