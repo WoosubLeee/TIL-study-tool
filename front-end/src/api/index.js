@@ -14,7 +14,7 @@ export const requestLogout = () => {
 
 export const getRepoFiles = () => {
   const headers = {
-    Authorization: 'Token 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',
+    Authorization: process.env.REACT_APP_GITHUB_ACCESS_TOKEN,
   };
 
   return fetch('https://api.github.com/repos/WoosubLeee/TIL/git/trees/master?recursive=1', {
