@@ -80,7 +80,7 @@ function App() {
             <SubjectList subjects={subjects} />
           </div>
           <div className="w-50">
-            <ListRecord subjects={subjects} recordRef={recordRef} />
+            <ListRecord subjects={subjects} recordRef={recordRef} isLogin={isLogin} />
           </div>
         </div>
       </div>

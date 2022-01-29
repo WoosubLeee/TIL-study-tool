@@ -49,3 +49,13 @@ input:focus {
   height: 32px;
   font-size: 15px;
 }
+
+.del-btn {
+  height: 22px;
+  font-size: 12px;
+}
+
+.del-switch-btn {
+  position: absolute;
+  right: 43px;
+}

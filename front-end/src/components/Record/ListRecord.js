@@ -1,17 +1,20 @@
-import { onValue } from "firebase/database";
 import { useEffect, useState } from "react";
+import { onValue } from "firebase/database";
+import { deleteRecord } from "../../api";
 import SubjectItem from "../Subject/SubjectItem";
 
-const ListRecord = ({ subjects, recordRef }) => {
+const ListRecord = ({ subjects, recordRef, isLogin }) => {
   const [records, setRecords] = useState(undefined);
   const [dateCounts, setDateCounts] = useState({});
+  const [deleteMode, setDeleteMode] = useState(false);
 
   useEffect(() => {
     onValue(recordRef, snapshot => {
       if (subjects.length !== 0) {
         const data = snapshot.val();
 
-        const recordsArr = Object.values(data).map(record => {
+        const recordsArr = Object.keys(data).map(key => {
+          const record = data[key];
           const date = new Date(record.timestamp);
           const datetime = [date.getFullYear(), date.getMonth()+1, date.getDate()].join('/');
     
@@ -21,6 +24,7 @@ const ListRecord = ({ subjects, recordRef }) => {
           });
           
           return {
+            key: key,
             datetime: datetime,
             subject: recordSubject,
           };
@@ -43,19 +47,41 @@ const ListRecord = ({ subjects, recordRef }) => {
     setDateCounts(counts);
   };
 
+  const handleDelete = key => {
+    deleteRecord(key);
+  };
+
+  const switchDelete = () => {
+    setDeleteMode(!deleteMode);
+  };
+
   return (
-    <table className="table">
-      <tbody>
-        {records ? records.map((record, i) => {
-          return (
-            <tr key={i}>
-              {i === 0 || record.datetime !== records[i-1].datetime ? <td rowSpan={dateCounts[record.datetime]}>{record.datetime}</td> : <></>}
-              <SubjectItem subject={record.subject.subject} url={record.subject.url} />
-            </tr>
-          )
-        }) : <></>}
-      </tbody>
-    </table>
+    <div>
+      <table className="table">
+        <tbody>
+          {records ? records.map((record, i) => {
+            return (
+              <tr key={i}>
+                {i === 0 || record.datetime !== records[i-1].datetime ? <td rowSpan={dateCounts[record.datetime]} valign="middle">{record.datetime}</td> : <></>}
+                <SubjectItem subject={record.subject.subject} url={record.subject.url} classes={"flex-grow-1"} />
+                <td style={{visibility: deleteMode ? "visible" : "hidden"}}>
+                  <button type="button" className="del-btn btn btn-danger bg-danger py-0 px-2" onClick={() => handleDelete(record.key)}>삭제</button>
+                </td>
+              </tr>
+            )
+          }) : <></>}
+        </tbody>
+      </table>
+      {isLogin ?
+        <div onClick={switchDelete}>
+          {deleteMode ?
+            <button type="button" className="del-switch-btn btn btn-secondary py-0 px-4">취소</button> :
+            <button type="button" className="del-switch-btn btn btn-danger bg-danger py-0 px-4">삭제</button>
+          }
+        </div> :
+        null
+      }
+    </div>
   );
 }
  
