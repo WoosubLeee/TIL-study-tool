@@ -28,12 +28,8 @@ input:focus {
   width: 1024px;
 }
 
-.subjectList {
-  width: 50%;
-}
-
 #picker-container {
-  width: 500px;
+  width: 800px;
 }
 
 #picker-table {
@@ -44,7 +40,12 @@ input:focus {
   height: 50px;
 }
 
+.picker-subject {
+  white-space: nowrap;
+}
+
 .complete-btn {
+  width: 60px;
   height: 32px;
   font-size: 15px;
 }

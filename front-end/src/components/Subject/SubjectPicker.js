@@ -43,7 +43,7 @@ const SubjectPicker = ({ subjects, recordRef }) => {
               <tr key={i} className="picker-table-row d-flex justify-content-between">
                 {isPicked ? 
                   <>
-                    <SubjectItem subject={subject.subject} url={subject.url} classes={"flex-grow-1"} />
+                    <SubjectItem subject={subject.subject} url={subject.url} classes={"picker-subject flex-grow-1"} />
                     <td>
                       <button onClick={() => handleComplete(subject.subject)} type="button" className="btn btn-success py-0 picker-btn complete-btn">완료</button>
                     </td>
