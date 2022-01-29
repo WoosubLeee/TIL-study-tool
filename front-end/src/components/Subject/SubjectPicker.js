@@ -2,7 +2,7 @@ import { useState } from "react";
 import { recordStudy } from "../../api";
 import SubjectItem from "./SubjectItem";
 
-const SubjectPicker = ({ subjects, recordRef }) => {
+const SubjectPicker = ({ subjects, recordRef, isLogin }) => {
   const [pickAmount, setPickAmount] = useState(2);
   const [picked, setPicked] = useState(Array(pickAmount).fill(' '));
   const [isPicked, setIsPicked] = useState(false);
@@ -44,9 +44,11 @@ const SubjectPicker = ({ subjects, recordRef }) => {
                 {isPicked ? 
                   <>
                     <SubjectItem subject={subject.subject} url={subject.url} classes={"picker-subject flex-grow-1"} />
-                    <td>
-                      <button onClick={() => handleComplete(subject.subject)} type="button" className="btn btn-success py-0 picker-btn complete-btn">완료</button>
-                    </td>
+                    { isLogin ?
+                      <td>
+                        <button onClick={() => handleComplete(subject.subject)} type="button" className="btn btn-success py-0 picker-btn complete-btn">완료</button>
+                      </td> : <></>
+                    }
                   </> : 
                   <td className="w-100">{"주제 선정 버튼을 클릭하세요"}</td>
                 }

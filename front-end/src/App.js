@@ -74,7 +74,7 @@ function App() {
     <div className="App mx-auto">
       <Navbar isLogin={isLogin} setIsLogin={setIsLogin} />
       <div className="main-container mx-auto my-4">
-        <SubjectPicker subjects={subjects} recordRef={recordRef} />
+        <SubjectPicker subjects={subjects} recordRef={recordRef} isLogin={isLogin} />
         <div className="d-flex">
           <div className="w-50">
             <SubjectList subjects={subjects} />
