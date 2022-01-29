@@ -12,7 +12,19 @@ code {
     monospace;
 }
 
-.App {
+input:focus {
+  box-shadow: none !important;
+}
+
+.navbar {
+  width: 1024px;
+}
+
+.input-group {
+  width: 250px;
+}
+
+.main-container {
   width: 1024px;
 }
 

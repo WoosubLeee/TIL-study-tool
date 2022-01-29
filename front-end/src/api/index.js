@@ -1,4 +1,16 @@
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { push, set } from "firebase/database";
+
+export const requestLogin = password => {
+  const auth = getAuth();
+  const email = 'zbxv1423@gmail.com';
+  return signInWithEmailAndPassword(auth, email, password);
+};
+
+export const requestLogout = () => {
+  const auth = getAuth();
+  return signOut(auth);
+};
 
 export const getRepoFiles = () => {
   const headers = {

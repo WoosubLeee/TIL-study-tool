@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getDatabase, ref } from "firebase/database";
 import { getRepoFiles } from "./api";
+import Navbar from "./components/Header/Navbar";
 import SubjectList from './components/Subject/SubjectList';
 import SubjectPicker from './components/Subject/SubjectPicker';
 import ListRecord from "./components/Record/ListRecord";
 
 function App() {
   const [subjects, setSubjects] = useState([]);
+  const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
     getRepoFiles()
@@ -15,6 +18,13 @@ function App() {
         const readmes = data.tree.filter(file => file.path.includes('README.md'));
         saveSubjects(readmes);
       });
+  }, []);
+
+  useEffect(() => {
+    const auth = getAuth();
+    if (auth.currentUser) {
+      setIsLogin(true);
+    }
   }, []);
 
   const firebaseConfig = {
@@ -61,14 +71,17 @@ function App() {
   };
 
   return (
-    <div className="App mx-auto my-4">
-      <SubjectPicker subjects={subjects} recordRef={recordRef} />
-      <div className="d-flex">
-        <div className="w-50">
-          <SubjectList subjects={subjects} />
-        </div>
-        <div className="w-50">
-          <ListRecord subjects={subjects} recordRef={recordRef} />
+    <div className="App mx-auto">
+      <Navbar isLogin={isLogin} setIsLogin={setIsLogin} />
+      <div className="main-container mx-auto my-4">
+        <SubjectPicker subjects={subjects} recordRef={recordRef} />
+        <div className="d-flex">
+          <div className="w-50">
+            <SubjectList subjects={subjects} />
+          </div>
+          <div className="w-50">
+            <ListRecord subjects={subjects} recordRef={recordRef} />
+          </div>
         </div>
       </div>
     </div>
