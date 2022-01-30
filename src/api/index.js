@@ -43,7 +43,7 @@ export const getRecordRef = () => {
 export const recordStudy = data => {
   const recordRef = ref(db, 'record');
   data.timestamp = new Date().getTime();
-  set(push(ref), data);
+  set(push(recordRef), data);
 };
 
 export const deleteRecord = key => {
