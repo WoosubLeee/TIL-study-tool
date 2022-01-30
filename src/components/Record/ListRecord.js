@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { onValue } from "firebase/database";
 import { deleteRecord } from "../../api";
-import SubjectItem from "../Subject/SubjectItem";
+import SubjectItem from "../Common/SubjectItem";
 
 const ListRecord = ({ subjects, recordRef, isLogin }) => {
   const [records, setRecords] = useState(undefined);

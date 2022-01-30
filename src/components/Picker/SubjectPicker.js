@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { recordStudy } from "../../api";
-import SubjectItem from "./SubjectItem";
+import SubjectItem from "../Common/SubjectItem";
 
 const SubjectPicker = ({ subjects, recordRef, isLogin }) => {
   const [pickAmount, setPickAmount] = useState(2);

@@ -3,9 +3,9 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref } from "firebase/database";
 import { getRepoFiles } from "./api";
-import Navbar from "./components/Header/Navbar";
+import Navbar from "./components/Navbar/Navbar";
+import SubjectPicker from './components/Picker/SubjectPicker';
 import SubjectList from './components/Subject/SubjectList';
-import SubjectPicker from './components/Subject/SubjectPicker';
 import ListRecord from "./components/Record/ListRecord";
 
 function App() {

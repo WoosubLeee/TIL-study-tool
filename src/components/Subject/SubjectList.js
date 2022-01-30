@@ -1,4 +1,4 @@
-import SubjectItem from './SubjectItem';
+import SubjectItem from '../Common/SubjectItem';
 
 const SubjectList = ({ subjects }) => {
   return (
