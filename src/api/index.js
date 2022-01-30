@@ -36,7 +36,12 @@ export const getRepoFiles = () => {
     .then(res => res.json());
 };
 
-export const recordStudy = (ref, data) => {
+export const getRecordRef = () => {
+  return ref(db, 'record');
+};
+
+export const recordStudy = data => {
+  const recordRef = ref(db, 'record');
   data.timestamp = new Date().getTime();
   set(push(ref), data);
 };

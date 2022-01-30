@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { onValue } from "firebase/database";
-import { deleteRecord } from "../../api";
+import { getRecordRef, deleteRecord } from "../../api";
 import SubjectItem from "../Common/SubjectItem";
 
-const ListRecord = ({ subjects, recordRef, isLogin }) => {
+const ListRecord = ({ subjects, isLogin }) => {
   const [records, setRecords] = useState(undefined);
   const [dateCounts, setDateCounts] = useState({});
   const [deleteMode, setDeleteMode] = useState(false);
 
   useEffect(() => {
+    const recordRef = getRecordRef();
     onValue(recordRef, snapshot => {
       if (subjects.length !== 0) {
         const data = snapshot.val();

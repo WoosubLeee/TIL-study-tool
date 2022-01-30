@@ -2,7 +2,7 @@ import { useState } from "react";
 import { recordStudy } from "../../api";
 import SubjectItem from "../Common/SubjectItem";
 
-const SubjectPicker = ({ subjects, recordRef, isLogin }) => {
+const SubjectPicker = ({ subjects, isLogin }) => {
   const [pickAmount, setPickAmount] = useState(2);
   const [picked, setPicked] = useState(Array(pickAmount).fill(' '));
   const [isPicked, setIsPicked] = useState(false);
@@ -31,7 +31,7 @@ const SubjectPicker = ({ subjects, recordRef, isLogin }) => {
       majorSubject: subject[0],
       subSubject: subject[subject.length-1],
     };
-    recordStudy(recordRef, data);
+    recordStudy(data);
   };
 
   return (

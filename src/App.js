@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref } from "firebase/database";
+import { getDatabase } from "firebase/database";
 import { getRepoFiles } from "./api";
 import Navbar from "./components/Navbar/Navbar";
 import SubjectPicker from './components/Picker/SubjectPicker';
@@ -26,19 +26,6 @@ function App() {
       setIsLogin(true);
     }
   }, []);
-
-  const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: "til-study-tool.firebaseapp.com",
-    projectId: "til-study-tool",
-    storageBucket: "til-study-tool.appspot.com",
-    messagingSenderId: "1006968567706",
-    appId: "1:1006968567706:web:c79c3616cdbe0fc29aec23",
-    measurementId: "G-ZK7MJGRSJ1"
-  };
-  initializeApp(firebaseConfig);
-  const db = getDatabase();
-  const recordRef = ref(db, 'record');
 
   const saveSubjects = readmes => {
     let readmeArrs = readmes.map(readme => readme.path.split('/'));
@@ -74,13 +61,13 @@ function App() {
     <div className="App mx-auto">
       <Navbar isLogin={isLogin} setIsLogin={setIsLogin} />
       <div className="main-container mx-auto my-4">
-        <SubjectPicker subjects={subjects} recordRef={recordRef} isLogin={isLogin} />
+        <SubjectPicker subjects={subjects} isLogin={isLogin} />
         <div className="d-flex">
           <div className="w-50">
             <SubjectList subjects={subjects} />
           </div>
           <div className="w-50">
-            <ListRecord subjects={subjects} recordRef={recordRef} isLogin={isLogin} />
+            <ListRecord subjects={subjects} isLogin={isLogin} />
           </div>
         </div>
       </div>
