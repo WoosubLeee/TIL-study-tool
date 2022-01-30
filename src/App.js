@@ -10,6 +10,7 @@ import ListRecord from "./components/Record/ListRecord";
 
 function App() {
   const [subjects, setSubjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
@@ -17,6 +18,9 @@ function App() {
       .then(data => {
         const readmes = data.tree.filter(file => file.path.includes('README.md'));
         saveSubjects(readmes);
+      })
+      .then(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -52,6 +56,7 @@ function App() {
       return {
         subject: arr,
         url: baseUrl + arr.join('/'),
+        count: 0,
       };
     });
     setSubjects(subjects);
@@ -67,7 +72,7 @@ function App() {
             <SubjectList subjects={subjects} />
           </div>
           <div className="w-50">
-            <ListRecord subjects={subjects} isLogin={isLogin} />
+            <ListRecord subjects={subjects} isLoading={isLoading} setSubjects={setSubjects} isLogin={isLogin} />
           </div>
         </div>
       </div>

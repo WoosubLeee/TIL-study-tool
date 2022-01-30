@@ -50,6 +50,10 @@ input:focus {
   font-size: 15px;
 }
 
+#count-col {
+  width: 100px;
+}
+
 .del-btn {
   height: 22px;
   font-size: 12px;

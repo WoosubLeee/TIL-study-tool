@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import _ from 'lodash';
 import { onValue } from "firebase/database";
 import { getRecordRef, deleteRecord } from "../../api";
 import SubjectItem from "../Common/SubjectItem";
 
-const ListRecord = ({ subjects, isLogin }) => {
+const ListRecord = ({ subjects, isLoading, setSubjects, isLogin }) => {
   const [records, setRecords] = useState(undefined);
   const [dateCounts, setDateCounts] = useState({});
   const [deleteMode, setDeleteMode] = useState(false);
@@ -12,6 +13,7 @@ const ListRecord = ({ subjects, isLogin }) => {
     const recordRef = getRecordRef();
     onValue(recordRef, snapshot => {
       if (subjects.length !== 0) {
+        const subjectsCopy = _.cloneDeep(subjects);
         const data = snapshot.val();
 
         const recordsArr = Object.keys(data).map(key => {
@@ -19,9 +21,13 @@ const ListRecord = ({ subjects, isLogin }) => {
           const date = new Date(record.timestamp);
           const datetime = [date.getFullYear(), date.getMonth()+1, date.getDate()].join('/');
     
-          const recordSubject = subjects.find(subject => {
+          const recordSubject = subjectsCopy.find(subject => {
             const subjectArr = subject.subject;
-            return subjectArr[0] === record.majorSubject && subjectArr[subjectArr.length-1] === record.subSubject;
+            if (subjectArr[0] === record.majorSubject && subjectArr[subjectArr.length-1] === record.subSubject) {
+              subject.count += 1;
+              return true;
+            };
+            return false;
           });
           
           return {
@@ -33,9 +39,10 @@ const ListRecord = ({ subjects, isLogin }) => {
         
         setRecords(recordsArr);
         countDates(recordsArr);
+        setSubjects(subjectsCopy);
       }
     });
-  }, [subjects]);
+  }, [isLoading]);
 
   const countDates = (records) => {
     let counts = {};
