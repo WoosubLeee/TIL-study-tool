@@ -70,7 +70,7 @@ const ListRecord = ({ subjects, isLoading, setSubjects, isLogin }) => {
           {records ? records.map((record, i) => {
             return (
               <tr key={i}>
-                {i === 0 || record.datetime !== records[i-1].datetime ? <td rowSpan={dateCounts[record.datetime]} valign="middle">{record.datetime}</td> : <></>}
+                {i === 0 || record.datetime !== records[i-1].datetime ? <td className="text-center align-middle" rowSpan={dateCounts[record.datetime]}>{record.datetime}</td> : <></>}
                 <SubjectItem subject={record.subject.subject} url={record.subject.url} classes={"flex-grow-1"} />
                 <td style={{visibility: deleteMode ? "visible" : "hidden"}}>
                   <button type="button" className="del-btn btn btn-danger bg-danger py-0 px-2" onClick={() => handleDelete(record.key)}>삭제</button>

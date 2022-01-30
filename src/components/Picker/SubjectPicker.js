@@ -50,7 +50,7 @@ const SubjectPicker = ({ subjects, isLogin }) => {
                       </td> : <></>
                     }
                   </> : 
-                  <td className="w-100">{"주제 선정 버튼을 클릭하세요"}</td>
+                  <td className="w-100">주제를 선정해주세요</td>
                 }
               </tr>
             )

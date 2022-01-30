@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getDatabase } from "firebase/database";
 import { getRepoFiles } from "./api";
 import Navbar from "./components/Navbar/Navbar";
 import SubjectPicker from './components/Picker/SubjectPicker';
