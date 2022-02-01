@@ -26,7 +26,7 @@ const Navbar = ({ isLogin, setIsLogin }) => {
   return (
     <nav className="bg-success">
       <nav className="navbar mx-auto text-white">
-        <h3>TIL Study Tool</h3>
+        <p className="m-0" id="nav-title">TIL Study Tool</p>
         {isLogin ? 
           <button className="btn btn-light btn-sm" onClick={handleLogout}>로그아웃</button> :
           <div className="d-flex">

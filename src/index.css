@@ -28,6 +28,11 @@ input:focus {
   width: 1024px;
 }
 
+#nav-title {
+  font-size: 30px;
+  font-weight: 500;
+}
+
 #picker-container {
   width: 800px;
 }
@@ -54,6 +59,14 @@ input:focus {
   width: 100px;
 }
 
+.record-row {
+  height: 43px;
+}
+
+.record-date {
+  width: 104px;
+}
+
 .del-btn {
   height: 22px;
   font-size: 12px;
@@ -61,5 +74,5 @@ input:focus {
 
 .del-switch-btn {
   position: absolute;
-  right: 43px;
+  right: 10px;
 }
