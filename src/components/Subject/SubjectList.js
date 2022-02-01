@@ -1,6 +1,6 @@
 import SubjectItem from '../Common/SubjectItem';
 
-const SubjectList = ({ subjects }) => {
+const SubjectList = ({ subjects, recordCounts }) => {
   return (
     <table className="table table-striped table-bordered table-sm">
       <thead>
@@ -14,7 +14,7 @@ const SubjectList = ({ subjects }) => {
           return (
             <tr key={i}>
               <SubjectItem subject={subject.subject} url={subject.url} />
-              <td className={`text-center align-middle ${subject.count > 0 ? "fw-bold" : "fw-light"}`}>{subject.count}</td>
+              <td className={`text-center align-middle ${recordCounts[i] > 0 ? "fw-bold" : "fw-light"}`}>{recordCounts[i]}</td>
             </tr>
           );
         })}

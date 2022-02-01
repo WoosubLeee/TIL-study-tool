@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { getRepoFiles } from "./api";
+import { getRepoFiles, getRecordRef } from "./api";
 import Navbar from "./components/Navbar/Navbar";
 import SubjectPicker from './components/Picker/SubjectPicker';
 import SubjectList from './components/Subject/SubjectList';
@@ -8,19 +9,52 @@ import ListRecord from "./components/Record/ListRecord";
 
 function App() {
   const [subjects, setSubjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isSubjectsLoading, setIsSubjectsLoading] = useState(true);
+  const [records, setRecords] = useState(undefined);
+  const [recordCounts, setRecordCounts] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
     getRepoFiles()
-      .then(data => {
-        const readmes = data.tree.filter(file => file.path.includes('README.md'));
+      .then(repoData => {
+        const readmes = repoData.tree.filter(file => file.path.includes('README.md'));
         saveSubjects(readmes);
       })
-      .then(() => {
-        setIsLoading(false);
-      });
   }, []);
+
+  useEffect(() => {
+    if (subjects.length > 0) {
+      const recordRef = getRecordRef();
+      onValue(recordRef, snapshot => {
+        const recordData = snapshot.val();
+
+        const counts = Array(subjects.length).fill(0);
+        const records = Object.keys(recordData).map(key => {
+          const record = recordData[key];
+          const date = new Date(record.timestamp);
+          const datetime = [date.getFullYear(), date.getMonth()+1, date.getDate()].join('/');
+          
+          const recordSubject = subjects.find((subject, i) => {
+            const subjectArr = subject.subject;
+            if (subjectArr[0] === record.majorSubject && subjectArr[subjectArr.length-1] === record.subSubject) {
+              counts[i]++;
+              return true;
+            };
+            return false;
+          });
+          
+          return {
+            key: key,
+            datetime: datetime,
+            subject: recordSubject,
+          };
+        }).reverse();
+        
+        setRecords(records);
+        setRecordCounts(counts);
+      });
+    }
+  }, [isSubjectsLoading]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -54,23 +88,23 @@ function App() {
       return {
         subject: arr,
         url: baseUrl + arr.join('/'),
-        count: 0,
       };
     });
     setSubjects(subjects);
+    setIsSubjectsLoading(false);
   };
 
   return (
     <div className="App mx-auto">
       <Navbar isLogin={isLogin} setIsLogin={setIsLogin} />
       <div className="main-container mx-auto my-4">
-        <SubjectPicker subjects={subjects} isLogin={isLogin} />
+        <SubjectPicker subjects={subjects} isLogin={isLogin} records={records} />
         <div className="d-flex">
           <div className="w-50">
-            <SubjectList subjects={subjects} />
+            <SubjectList subjects={subjects} recordCounts={recordCounts} />
           </div>
           <div className="w-50">
-            <ListRecord subjects={subjects} isLoading={isLoading} setSubjects={setSubjects} isLogin={isLogin} />
+            <ListRecord records={records} isLogin={isLogin} />
           </div>
         </div>
       </div>

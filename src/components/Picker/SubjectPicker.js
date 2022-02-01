@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { recordStudy } from "../../api";
+import { deleteRecord, recordStudy } from "../../api";
 import SubjectItem from "../Common/SubjectItem";
 
-const SubjectPicker = ({ subjects, isLogin }) => {
+const SubjectPicker = ({ subjects, isLogin, records }) => {
   const [pickAmount, setPickAmount] = useState(2);
-  const [picked, setPicked] = useState(Array(pickAmount).fill(' '));
+  const [picked, setPicked] = useState(Array(pickAmount).fill(''));
   const [isPicked, setIsPicked] = useState(false);
 
   const pickSubjects = () => {
@@ -21,17 +21,35 @@ const SubjectPicker = ({ subjects, isLogin }) => {
       return {
         subject: subjects[idx].subject,
         url: subjects[idx].url,
+        isComplete: false,
       };
     }));
     setIsPicked(true);
   };
 
-  const handleComplete = subject => {
+  const handleComplete = (subject, idx) => {
     const data = {
       majorSubject: subject[0],
       subSubject: subject[subject.length-1],
     };
-    recordStudy(data);
+    recordStudy(data)
+      .then(() => {
+        switchComplete(idx);
+      });
+  };
+
+  const handleCancel = idx => {
+    const record = records.find(record => JSON.stringify(record.subject.subject) === JSON.stringify(picked[idx].subject));
+    deleteRecord(record.key)
+      .then(() => {
+        switchComplete(idx);
+      });
+  };
+
+  const switchComplete = idx => {
+    const newPicked = [...picked];
+    newPicked[idx].isComplete = !newPicked[idx].isComplete;
+    setPicked(newPicked);
   };
 
   return (
@@ -43,10 +61,13 @@ const SubjectPicker = ({ subjects, isLogin }) => {
               <tr key={i} className="picker-table-row d-flex justify-content-between">
                 {isPicked ? 
                   <>
-                    <SubjectItem subject={subject.subject} url={subject.url} classes={"picker-subject flex-grow-1"} />
+                    <SubjectItem subject={subject.subject} url={subject.url} classes={`picker-subject flex-grow-1 ${subject.isComplete ? "text-decoration-line-through" : ""}`} />
                     { isLogin ?
                       <td>
-                        <button onClick={() => handleComplete(subject.subject)} type="button" className="btn btn-success py-0 picker-btn complete-btn">완료</button>
+                        {subject.isComplete ?
+                          <button onClick={() => handleCancel(i)} type="button" className="btn btn-secondary py-0 complete-btn">취소</button> :
+                          <button onClick={() => handleComplete(subject.subject, i)} type="button" className="btn btn-success py-0 complete-btn">완료</button>
+                        }
                       </td> : <></>
                     }
                   </> : 
