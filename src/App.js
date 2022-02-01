@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar/Navbar";
 import SubjectPicker from './components/Picker/SubjectPicker';
 import SubjectList from './components/Subject/SubjectList';
 import ListRecord from "./components/Record/ListRecord";
+import { getDate } from "./utils/common";
 
 function App() {
   const [subjects, setSubjects] = useState([]);
@@ -31,8 +32,7 @@ function App() {
         const counts = Array(subjects.length).fill(0);
         const records = Object.keys(recordData).map(key => {
           const record = recordData[key];
-          const date = new Date(record.timestamp);
-          const datetime = [date.getFullYear(), date.getMonth()+1, date.getDate()].join('/');
+          const datetime = getDate(record.timestamp);
           
           const recordSubject = subjects.find((subject, i) => {
             const subjectArr = subject.subject;

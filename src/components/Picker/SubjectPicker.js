@@ -1,11 +1,16 @@
 import { useState } from "react";
+import { useEffect } from "react/cjs/react.development";
 import { deleteRecord, recordStudy } from "../../api";
+import { getDate } from "../../utils/common";
 import SubjectItem from "../Common/SubjectItem";
 
 const SubjectPicker = ({ subjects, isLogin, records }) => {
   const [pickAmount, setPickAmount] = useState(2);
   const [picked, setPicked] = useState(Array(pickAmount).fill(''));
-  const [isPicked, setIsPicked] = useState(false);
+
+  useEffect(() => {
+    checkComplete(picked);
+  }, [records]);
 
   const pickSubjects = () => {
     let indexes = [];
@@ -17,14 +22,31 @@ const SubjectPicker = ({ subjects, isLogin, records }) => {
       }
     }
     
-    setPicked(indexes.map(idx => {
+    const picked = indexes.map(idx => {
       return {
         subject: subjects[idx].subject,
         url: subjects[idx].url,
         isComplete: false,
       };
-    }));
-    setIsPicked(true);
+    });
+    checkComplete(picked);
+  };
+
+  const checkComplete = picked => {
+    if (isLogin) {
+      picked = picked.map(pick => {
+        const counts = records.filter(record => {
+          if (JSON.stringify(record.subject.subject) === JSON.stringify(pick.subject) && (record.datetime === getDate(Date.now()))) {
+            pick.isComplete = true;
+            return true;
+          };
+          return false;
+        }).length;
+        if (pick.isComplete === true && counts === 0) pick.isComplete = false;
+        return pick;
+      });
+    }
+    setPicked(picked);
   };
 
   const handleComplete = (subject, idx) => {
@@ -32,24 +54,12 @@ const SubjectPicker = ({ subjects, isLogin, records }) => {
       majorSubject: subject[0],
       subSubject: subject[subject.length-1],
     };
-    recordStudy(data)
-      .then(() => {
-        switchComplete(idx);
-      });
+    recordStudy(data);
   };
 
   const handleCancel = idx => {
     const record = records.find(record => JSON.stringify(record.subject.subject) === JSON.stringify(picked[idx].subject));
-    deleteRecord(record.key)
-      .then(() => {
-        switchComplete(idx);
-      });
-  };
-
-  const switchComplete = idx => {
-    const newPicked = [...picked];
-    newPicked[idx].isComplete = !newPicked[idx].isComplete;
-    setPicked(newPicked);
+    deleteRecord(record.key);
   };
 
   return (
@@ -59,7 +69,7 @@ const SubjectPicker = ({ subjects, isLogin, records }) => {
           {picked.map((subject, i) => {
             return (
               <tr key={i} className="picker-table-row d-flex justify-content-between">
-                {isPicked ? 
+                {subject !== '' ? 
                   <>
                     <SubjectItem subject={subject.subject} url={subject.url} classes={`picker-subject flex-grow-1 ${subject.isComplete ? "text-decoration-line-through" : ""}`} />
                     { isLogin ?
