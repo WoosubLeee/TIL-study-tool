@@ -48,7 +48,20 @@ function App() {
             datetime: datetime,
             subject: recordSubject,
           };
-        }).reverse();
+        });
+
+        records.sort((a, b) => {
+          const aDate = a.datetime.split('/').map(time => parseInt(time));
+          const bDate = b.datetime.split('/').map(time => parseInt(time));
+          for (let i = 0; i < 3; i++) {
+            if (aDate[i] > bDate[i]) {
+              return -1;
+            } else if (aDate[i] < bDate[i]) {
+              return 1;
+            }
+          }
+          return -1;
+        });
         
         setRecords(records);
         setRecordCounts(counts);
