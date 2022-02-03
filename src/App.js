@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar/Navbar";
 import SubjectPicker from './components/Picker/SubjectPicker';
 import SubjectList from './components/Subject/SubjectList';
 import ListRecord from "./components/Record/ListRecord";
+import CalendarRecord from "./components/Record/CalendarRecord/CalendarRecord";
 import { getDate } from "./utils/common";
 
 function App() {
@@ -13,7 +14,9 @@ function App() {
   const [isSubjectsLoading, setIsSubjectsLoading] = useState(true);
   const [records, setRecords] = useState(undefined);
   const [recordCounts, setRecordCounts] = useState([]);
+  const [dateCounts, setDateCounts] = useState({});
   const [isLogin, setIsLogin] = useState(false);
+  const [isRecordList, setIsRecordList] = useState(true);
 
   useEffect(() => {
     getRepoFiles()
@@ -65,6 +68,15 @@ function App() {
         
         setRecords(records);
         setRecordCounts(counts);
+
+        let dateCounts = {};
+        records.forEach(record => {
+          if (!dateCounts.hasOwnProperty(record.datetime)) {
+            dateCounts[record.datetime] = 0;
+          }
+          dateCounts[record.datetime]++;
+        });
+        setDateCounts(dateCounts);
       });
     }
   }, [isSubjectsLoading]);
@@ -117,7 +129,14 @@ function App() {
             <SubjectList subjects={subjects} recordCounts={recordCounts} />
           </div>
           <div className="w-50">
-            <ListRecord records={records} isLogin={isLogin} />
+            <div className="d-flex justify-content-end">
+              <button className={`record-choice-btn btn ${isRecordList ? "btn-success" : "btn-light"}`} onClick={() => setIsRecordList(true)}>목록</button>
+              <button className={`record-choice-btn btn ${isRecordList ? "btn-light" : "btn-success"}`} onClick={() => setIsRecordList(false)}>최근 1년</button>
+            </div>
+            {isRecordList ?
+              <ListRecord records={records} dateCounts={dateCounts} isLogin={isLogin} /> :
+              <CalendarRecord records={records} dateCounts={dateCounts} />
+            }
           </div>
         </div>
       </div>

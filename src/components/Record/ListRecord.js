@@ -1,23 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { deleteRecord } from "../../api";
 import SubjectItem from "../Common/SubjectItem";
 
-const ListRecord = ({ records, isLogin }) => {
-  const [dateCounts, setDateCounts] = useState({});
+const ListRecord = ({ records, dateCounts, isLogin }) => {
   const [deleteMode, setDeleteMode] = useState(false);
-
-  useEffect(() => {
-    if (records) {
-      let counts = {};
-      records.forEach(record => {
-        if (!counts.hasOwnProperty(record.datetime)) {
-          counts[record.datetime] = 0;
-        }
-        counts[record.datetime]++;
-      });
-      setDateCounts(counts);
-    }
-  }, [records]);
 
   const handleDelete = key => {
     deleteRecord(key);
