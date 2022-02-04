@@ -128,6 +128,9 @@ function App() {
             <SubjectList subjects={subjects} recordCounts={recordCounts} />
           </div>
           <div className="w-50">
+            <h5 className="text-center text-success">
+              <span id="record-header">기록</span>
+            </h5>
             <CalendarRecord records={records} dateCounts={dateCounts} />
             <ListRecord records={records} dateCounts={dateCounts} isLogin={isLogin} /> :
           </div>
