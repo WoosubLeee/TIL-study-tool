@@ -59,12 +59,20 @@ input:focus {
   width: 100px;
 }
 
-.record-row {
-  height: 43px;
+#list-record {
+  font-size: 15px;
 }
 
 .record-date {
   width: 104px;
+}
+
+.list-record-item {
+  padding: 4px 8px !important;
+}
+
+.list-record-delete-td {
+  padding: 3px 8px !important;
 }
 
 .del-btn {

@@ -15,15 +15,15 @@ const ListRecord = ({ records, dateCounts, isLogin }) => {
 
   return (
     <div>
-      <table className="table table-bordered">
+      <table id="list-record" className="table table-bordered">
         <tbody>
           {records ? records.map((record, i) => {
             return (
               <tr key={i} className="record-row">
-                {i === 0 || record.datetime !== records[i-1].datetime ? <td className="record-date text-center align-middle" rowSpan={dateCounts[record.datetime]}>{record.datetime}</td> : <></>}
-                <SubjectItem subject={record.subject.subject} url={record.subject.url} classes={"flex-grow-1"} />
+                {i === 0 || record.datetime !== records[i-1].datetime ? <td className="list-record-item record-date text-center align-middle" rowSpan={dateCounts[record.datetime]}>{record.datetime}</td> : <></>}
+                <SubjectItem subject={record.subject.subject} url={record.subject.url} classes={"list-record-item flex-grow-1"} />
                 {deleteMode ? 
-                  <td className="text-center">
+                  <td className="list-record-delete-td text-center">
                     <button type="button" className="del-btn btn btn-danger bg-danger py-0 px-2" onClick={() => handleDelete(record.key)}>삭제</button>
                   </td> :
                   <></>
