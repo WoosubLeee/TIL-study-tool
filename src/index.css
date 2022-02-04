@@ -76,7 +76,9 @@ input:focus {
 }
 
 .list-record-delete-td {
+  width: 72px;
   padding: 3px 8px !important;
+  vertical-align: middle;
 }
 
 .del-btn {
