@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
+import { Tooltip } from "bootstrap";
 import _ from "lodash";
 import { getDate } from "../../utils/common";
 
-const CalendarRecord = ({ dateCounts }) => {
+const CalendarRecord = ({ records, dateCounts }) => {
   const [weekRecords, setWeekRecords] = useState([]);
   const [monthChanges, setMonthChanges] = useState([]);
 
   useEffect(() => {
-    if (dateCounts !== {}) {
+    if (records && dateCounts !== {}) {
       let tempWeekRecords = [[]];
       let weekIdx = 0;
+
       let date = new Date();
       let tempMonthChanges = [];
-
-      let dateStr;
+      
       let dayRecord;
+      let daySubjects;
+
       for (let i = 0; i < 232; i++) {
         if (date.getDay() === 6 && i !== 0) {
           tempWeekRecords[weekIdx].reverse();
@@ -29,13 +32,13 @@ const CalendarRecord = ({ dateCounts }) => {
           });
         }
 
-        dateStr = getDate(date);
         dayRecord = {
           date: _.cloneDeep(date),
-          count: 0,
+          subjects: [],
         };
-        if (dateStr in dateCounts) {
-          dayRecord.count = dateCounts[dateStr];
+        daySubjects = records.filter(record => record.datetime === getDate(date));
+        if (daySubjects) {
+          dayRecord.subjects = daySubjects.map(record => record.subject.subject);
         }
         tempWeekRecords[weekIdx].push(dayRecord);
         
@@ -44,10 +47,23 @@ const CalendarRecord = ({ dateCounts }) => {
       tempWeekRecords.reverse().splice(0, 1);
       setWeekRecords(tempWeekRecords);
       setMonthChanges(tempMonthChanges);
-
-      console.log(monthChanges);
     }
-  }, [dateCounts]);
+  }, [records, dateCounts]);
+
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new Tooltip(tooltipTriggerEl)
+  });
+
+  const formatTooltip = record => {
+    let string = getDate(record.date);
+    if (record.subjects.length > 0) {
+      string += `\n${record.subjects.length}개`
+    } else {
+      string += '\n기록 없음'
+    }
+    return string;
+  };
 
   return (
     <div className="my-4">
@@ -68,15 +84,20 @@ const CalendarRecord = ({ dateCounts }) => {
                 {weekRecords.map((weekRecord, j) => {
                   if (weekRecord.length > i) {
                     return (
-                      <td key={j}>
+                      <td
+                        key={j}
+                        data-bs-toggle="tooltip"
+                        title={formatTooltip(weekRecord[i])}
+                        className="record-tooltip"
+                      >
                         <div
                           className="calendar-record-square"
                           style={{
                             backgroundColor:
-                              weekRecord[i].count === 0 ? "#ebedf0" :
-                              weekRecord[i].count === 1 ? "#9be9a8" :
-                              weekRecord[i].count === 2 ? "#40c463" :
-                              weekRecord[i].count === 3 ? "#30a14e" :
+                              weekRecord[i].subjects.length === 0 ? "#ebedf0" :
+                              weekRecord[i].subjects.length === 1 ? "#9be9a8" :
+                              weekRecord[i].subjects.length === 2 ? "#40c463" :
+                              weekRecord[i].subjects.length === 3 ? "#30a14e" :
                               "#216e39"
                           }}
                         />

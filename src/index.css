@@ -59,6 +59,10 @@ input:focus {
   width: 100px;
 }
 
+.tooltip-inner {
+  white-space: pre-wrap;
+}
+
 #list-record {
   font-size: 15px;
 }
