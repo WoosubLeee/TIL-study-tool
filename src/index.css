@@ -77,6 +77,25 @@ input:focus {
   right: 10px;
 }
 
+#calendar-header {
+  position: relative;
+  width: 475.2px;
+  height: 18px;
+}
+
+.calendar-month {
+  position: absolute;
+  font-size: 11px;
+}
+
+.calendar-record-square {
+  width: 11px;
+  height: 11px;
+  border-radius: 4px;
+  background: #000;
+  margin: 0.7px;
+}
+
 .day-record-square {
   width: 25px;
   height: 25px;
