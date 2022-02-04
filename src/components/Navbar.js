@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { requestLogin, requestLogout } from "../../api";
+import { requestLogin, requestLogout } from "../api";
 
 const Navbar = ({ isLogin, setIsLogin }) => {
   const [password, setPassword] = useState('');

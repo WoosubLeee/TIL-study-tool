@@ -1,4 +1,4 @@
-import SubjectItem from '../Common/SubjectItem';
+import SubjectItem from './SubjectItem';
 
 const SubjectList = ({ subjects, recordCounts }) => {
   return (

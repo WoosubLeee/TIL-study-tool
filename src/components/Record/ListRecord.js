@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { deleteRecord } from "../../api";
-import SubjectItem from "../Common/SubjectItem";
+import SubjectItem from "../SubjectItem";
 
 const ListRecord = ({ records, dateCounts, isLogin }) => {
   const [deleteMode, setDeleteMode] = useState(false);

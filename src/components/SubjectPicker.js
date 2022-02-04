@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { deleteRecord, recordStudy } from "../../api";
-import { getDate } from "../../utils/common";
-import SubjectItem from "../Common/SubjectItem";
+import { deleteRecord, recordStudy } from "../api";
+import { getDate } from "../utils/common";
+import SubjectItem from "./SubjectItem";
 
 const SubjectPicker = ({ subjects, isLogin, records }) => {
   const [pickAmount, setPickAmount] = useState(2);
