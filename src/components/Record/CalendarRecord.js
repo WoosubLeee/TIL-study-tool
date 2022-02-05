@@ -99,7 +99,7 @@ const CalendarRecord = ({ records, dateCounts }) => {
             return (
               <tr key={i}>
                 {weekRecords.map((weekRecord, j) => {
-                  if (tooltipStrs.length > i) {
+                  if (weekRecord.length > i && tooltipStrs.length > i) {
                     return (
                       <td
                         key={j}
