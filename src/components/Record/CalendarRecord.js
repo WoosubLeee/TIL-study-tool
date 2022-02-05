@@ -6,6 +6,7 @@ import { getDate } from "../../utils/common";
 const CalendarRecord = ({ records, dateCounts }) => {
   const [weekRecords, setWeekRecords] = useState([]);
   const [monthChanges, setMonthChanges] = useState([]);
+  const [tooltipStrs, setTooltipStrs] = useState();
 
   useEffect(() => {
     if (records && dateCounts !== {}) {
@@ -50,20 +51,36 @@ const CalendarRecord = ({ records, dateCounts }) => {
     }
   }, [records, dateCounts]);
 
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new Tooltip(tooltipTriggerEl)
-  });
-
-  const formatTooltip = record => {
-    let string = getDate(record.date);
-    if (record.subjects.length > 0) {
-      string += `\n${record.subjects.length}개`
-    } else {
-      string += '\n기록 없음'
+  useEffect(() => {
+    if (weekRecords) {
+      let tempTooltipStrs = [];
+      let weekTooltips;
+      let record;
+      let string;
+      for (let i = 0; i < weekRecords.length; i++) {
+        weekTooltips = [];
+        for (let j = 0; j < weekRecords[i].length; j++) {
+          record = weekRecords[i][j];
+          string = getDate(record.date);
+          if (record.subjects.length > 0) {
+            string += `\n${record.subjects.length}개`
+          } else {
+            string += '\n기록 없음'
+          }
+          weekTooltips.push(string);
+        }
+        tempTooltipStrs.push(weekTooltips);
+      }
+      setTooltipStrs(tempTooltipStrs);
     }
-    return string;
-  };
+  }, [weekRecords]);
+
+  useEffect(() => {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new Tooltip(tooltipTriggerEl)
+    });
+  }, [tooltipStrs]);
 
   return (
     <div className="my-4">
@@ -82,12 +99,12 @@ const CalendarRecord = ({ records, dateCounts }) => {
             return (
               <tr key={i}>
                 {weekRecords.map((weekRecord, j) => {
-                  if (weekRecord.length > i) {
+                  if (tooltipStrs.length > i) {
                     return (
                       <td
                         key={j}
                         data-bs-toggle="tooltip"
-                        title={formatTooltip(weekRecord[i])}
+                        title={tooltipStrs[j][i]}
                         className="record-tooltip"
                       >
                         <div
