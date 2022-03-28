@@ -11,7 +11,6 @@ import { getDate } from "./utils/common";
 
 function App() {
   const [subjects, setSubjects] = useState([]);
-  const [isSubjectsLoading, setIsSubjectsLoading] = useState(true);
   const [records, setRecords] = useState(undefined);
   const [recordCounts, setRecordCounts] = useState([]);
   const [dateCounts, setDateCounts] = useState({});
@@ -36,7 +35,7 @@ function App() {
           const record = recordData[key];
           const datetime = getDate(record.timestamp);
           
-          const recordSubject = subjects.find((subject, i) => {
+          let recordSubject = subjects.find((subject, i) => {
             const subjectArr = subject.subject;
             if (subjectArr[0] === record.majorSubject && subjectArr[subjectArr.length-1] === record.subSubject) {
               counts[i]++;
@@ -44,6 +43,15 @@ function App() {
             };
             return false;
           });
+
+          // subjects에 record와 관련된 subject가 없을 경우(README 문서가 삭제된 경우)
+          // record의 majorSubject, subSubject만 사용하여 recordSubject 생성
+          if (!recordSubject) {
+            recordSubject = {
+              subject: [record.majorSubject, record.subSubject],
+              url: undefined
+            };
+          }
           
           return {
             key: key,
@@ -78,7 +86,7 @@ function App() {
         setDateCounts(dateCounts);
       });
     }
-  }, [isSubjectsLoading]);
+  }, [subjects]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -115,7 +123,6 @@ function App() {
       };
     });
     setSubjects(subjects);
-    setIsSubjectsLoading(false);
   };
 
   return (
